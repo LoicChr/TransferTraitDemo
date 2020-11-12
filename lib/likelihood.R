@@ -4,7 +4,7 @@
 #                                                 #
 ###################################################
 
-likelihood<- function(pars){
+likelihood<- function(pars, pred.mat = F){
   names(pars) <- list_params
   pars[c("Tmin_phi1", "c_phi1", "l_phi1")] <- acos(pars[c("Tmin_phi1", "c_phi1", "l_phi1")])
   
@@ -49,7 +49,12 @@ likelihood<- function(pars){
       }
     else{logLik <- -Inf; break}
   }
-  return(logLik)
+  if (pred.mat){
+    pred <- pred[gl(9,2),]
+    return(pred)
+  }else{
+    return(logLik)
+  }
 }
 
 LLpar <- function(parsMat){

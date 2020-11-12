@@ -33,3 +33,27 @@ N <- sum(ixp)
 pseudoR2 <- (1-exp(2/N*(H0-postDis[,"Llikelihood"])))/(1-exp(2/N*H0))
 hist(pseudoR2)
 
+# RMSE
+pars <- apply(postDis, 2, median)
+H0.pred <- matrix(1/ncol(ixp), nrow = nrow(ixp), ncol = ncol(ixp))
+
+pred = likelihood(pars, pred.mat = T)
+pred0 <- matrix(1/ncol(pred), ncol = ncol(pred), nrow = nrow(pred))
+
+N = 2000
+rmse <- numeric(N)
+rmse0 <- numeric(N)
+
+for (k in 1:N){
+  rmse[k] <- sqrt(sum(sapply(1:nrow(pred), function(i){
+    sim_i <- as.numeric(rmultinom(1,sum(ixp[i,]), pred[i,]))
+    sum((sim_i - as.numeric(ixp[i,]))^2)
+  }))/prod(dim(pred)))
+}
+for (k in 1:N){
+  rmse0[k] <- sqrt(sum(sapply(1:nrow(pred), function(i){
+    sim_i <- as.numeric(rmultinom(1,sum(ixp[i,]), pred0[i,]))
+    sum((sim_i - as.numeric(ixp[i,]))^2)
+  }))/prod(dim(pred)))
+}
+boxplot(rmse,rmse0, names = c("Transfer model", "H0")) 
