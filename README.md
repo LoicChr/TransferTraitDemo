@@ -8,21 +8,23 @@ The present code allows to calibrate a community model on a mountain grassland d
 main/obs.R is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script.
 main/prior.R contains the specification of the prior. It is directly called by main/obs.R
 main/output_analysis.R contains a small script to visualize the results of main/obs.R that are stored in results/obs/
-main/GLM_stan.R is the script to run the SDM model
-main/LVM_stan.R is the script to run the latent variable model (jSDM)
-main/saturated_stan.R is the script to run the saturated model
+
+lib/likelihood.R contains the likelihood function to optimize
+lib/LV_model_wrapped.cpp contains the ODE model. It is coded in C++ and uses the boost libraries
+lib/trait2demo.R contains the transfer function that estimates demographic parameters from functional traits.
+
+main/GLM_stan.R is the script to run the SDM model.
+main/LVM_stan.R is the script to run the latent variable model (jSDM).
+main/saturated_stan.R is the script to run the saturated model.
 main/sjSDM_BT.R is the script to run the sjSDM model with MCMC sampling.
 main/sjSDM_MLE.R is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:
 ```r
 devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="multinomial", subdir = "sjSDM")
 ```
 
-lib/likelihood.R contains the likelihood function to optimize
-lib/LV_model_wrapped.cpp contains the ODE model. It is coded in C++ and uses the boost libraries
-lib/trait2demo.R contains the transfer function that estimates demographic parameters from functional traits.
-lib/glm.stan contains the stan model for the SDM
-lib/lvm.stan contains the stan model for the latent variable model (jSDM)
-lib/saturated.stan contains the stan model for the saturated model
+lib/glm.stan contains the stan model for the SDM.
+lib/lvm.stan contains the stan model for the latent variable model (jSDM).
+lib/saturated.stan contains the stan model for the saturated model.
 
 ## Data file : data/data.Rdata
 This Rdata file contains the following objects
