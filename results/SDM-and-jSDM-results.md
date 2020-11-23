@@ -1,0 +1,334 @@
+---
+title: "SDM and jSDM results"
+author: "Maximilian Pichler"
+date: "10/26/2020"
+output: 
+  html_document: 
+    keep_md: yes
+    toc: true
+---
+
+
+
+
+```r
+library(BayesianTools)
+library(sjSDM)
+library(coda)
+library(rstan)
+```
+
+```
+## Loading required package: StanHeaders
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```
+## rstan (Version 2.21.2, GitRev: 2e1f913d3ca3)
+```
+
+```
+## For execution on a local, multicore CPU with excess RAM we recommend calling
+## options(mc.cores = parallel::detectCores()).
+## To avoid recompilation of unchanged Stan programs, we recommend calling
+## rstan_options(auto_write = TRUE)
+```
+
+```
+## 
+## Attaching package: 'rstan'
+```
+
+```
+## The following object is masked from 'package:coda':
+## 
+##     traceplot
+```
+
+```r
+set.seed(42)
+```
+
+
+## Help functions 
+
+```r
+dev = torch$device("cuda:2")
+load("TransferTraitDemo2/data/data.Rdata")
+env <- scale(temp)
+
+env <- as.matrix(env)
+colnames(env)[1] <- "V1"
+
+ixp <- as.matrix(ixp)
+X = model.matrix(~poly(V1, degree = 2 ), data.frame(env))
+Y = ixp
+n = nrow(X)
+e = ncol(X)
+sp = ncol(Y)
+XT = torch$tensor(X, dtype=torch$float32, device = dev)
+latent = 2L
+
+n_pars = e*sp + n*latent + latent*sp
+range_w = 1:(e*sp)
+range_lv = (1+(e*sp)):( e*sp + n*latent  )
+range_lf = - c( 1: (e*sp + n*latent  ))
+
+
+pred_sjSDM = function(pars) {
+  W = matrix(pars[1:(e*sp)], e, sp)
+  sigma = matrix(pars[-(1:(e*sp))], sp, latent)
+  mu = X %*% W
+  mut = torch$tensor(mu, dtype=torch$float32, device=dev)$to(dev)
+  sigmaT = torch$tensor(sigma, dtype = torch$float32, device=dev)$to(dev)
+  noise = torch$randn(size=list(3000L, mut$shape[0], sigmaT$shape[1]), device=dev)
+  E = torch$softmax(torch$tensordot(noise, sigmaT$t(), 1L)$add(mut), 2L)
+  E$mean(0L)$cpu()$data$numpy()
+}
+
+pred_LVM = function(pars) {
+  W = matrix(pars[range_w], e, sp)
+  LV = matrix(pars[range_lv ], n, latent)
+  LF = matrix(pars[range_lf], latent, sp)
+  WT = torch$tensor(W, dtype=torch$float32, device=dev)$to(dev)
+  LVT = torch$tensor(LV, dtype=torch$float32, device=dev)$to(dev)
+  LFT = torch$tensor(LF, dtype=torch$float32, device=dev)$to(dev)
+  pred = XT$matmul(WT)$add( LVT$matmul(LFT) )
+  E = torch$softmax(pred, 1L)
+  E$cpu()$data$numpy()
+}
+softmax = function(y) { exp(y)/sum(exp(y))}
+```
+
+
+## sjSDM - MLE
+
+```r
+model = readRDS("mle_sjSDM.RDS")
+```
+
+
+
+```r
+pred = predict(model)
+ll = sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+n_pars = (length(as.vector(model$weights[[1]])) + length(as.vector(model$sigma)))
+cat("Multinomial LogLikelihood: ", ll, "\n",
+    "AIC: ", 2*n_pars-2*ll, "\n",
+    "sjSDM LogLikelihood: ", logLik(model), "\n",
+    "AIC: ", 2*n_pars+2*logLik(model), "\n",
+    "N_pars: ", n_pars)
+```
+
+```
+## Multinomial LogLikelihood:  -2474.863 
+##  AIC:  7073.725 
+##  sjSDM LogLikelihood:  1321.351 
+##  AIC:  4766.702 
+##  N_pars:  1062
+```
+
+```r
+saveRDS(list(pred = pred, coef = t(coef(model)[[1]])), "TransferTraitDemo2/results/sjSDM.RDS")
+```
+
+
+## GLM - stan
+
+```r
+glm = readRDS("stan_glm.RDS")
+chain = mcmc(as.matrix(glm))
+plot(chain[,1:5])
+```
+
+![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-5-1.png)<!-- -->![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+
+
+
+```r
+ex = extract(glm)
+m_ind = which.max(ex$lp__)
+W = ex$W[m_ind,,]
+
+pred = t(apply((X %*% W), 1, softmax))
+ll = sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+
+lls =
+  sapply(sample.int(dim(ex$W)[1], 2000), function(i) { sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(t(apply((X %*% ex$W[i,,]), 1, softmax))[k,]+10e-5), log = T))) })
+
+DIC = var(-2 * lls)/2 -2 * mean(lls)
+
+n_pars = length(as.vector(W))
+cat("Multinomial LogLikelihood: ", ll, "\n",
+    "AIC: ", 2*n_pars-2*ll, "\n",
+    "DIC: ", DIC, "\n",
+    "N_pars: ", n_pars)
+```
+
+```
+## Multinomial LogLikelihood:  -1693.495 
+##  AIC:  4094.99 
+##  DIC:  3840.066 
+##  N_pars:  354
+```
+
+```r
+saveRDS(list(pred = pred, coef = W), "TransferTraitDemo2/results/SDM.RDS")
+```
+
+## LVM - stan
+
+```r
+lvm = readRDS("stan_lvm.RDS")
+chain = mcmc(as.matrix(lvm))
+plot(chain[,1:5])
+```
+
+![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-7-1.png)<!-- -->![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+
+
+
+```r
+ex = extract(lvm)
+m_ind = which.max(ex$lp__)
+LF = ex$LF[m_ind,,]
+LV = ex$LV[m_ind,,]
+W = ex$W[m_ind,,]
+
+
+pred = t(apply((X %*% W + LV %*% LF), 1, softmax))
+ll = sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+lls =
+  sapply(sample.int(dim(ex$LF)[1], 2000), function(i) { sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(t(apply((X %*% ex$W[i,,] + ex$LV[i,,] %*% ex$LF[i,,]), 1, softmax))[k,]+10e-5), log = T))) })
+
+DIC = var(-2 * lls)/2 -2 * mean(lls)
+
+n_pars = (length(as.vector(W))+length(as.vector(LV))+length(as.vector(LF)))
+cat("Multinomial LogLikelihood: ", ll, "\n",
+    "AIC: ", 2*n_pars-2*ll, "\n",
+    "DIC: ", DIC, "\n",
+    "N_pars: ", n_pars)
+```
+
+```
+## Multinomial LogLikelihood:  -1322.261 
+##  AIC:  3896.521 
+##  DIC:  3182.819 
+##  N_pars:  626
+```
+
+```r
+saveRDS(list(pred = pred, coef = W), "TransferTraitDemo2/results/jSDM_LVM.RDS")
+```
+
+## Saturated - stan
+
+```r
+sat = readRDS("stan_saturated.RDS")
+chain = mcmc(as.matrix(sat))
+plot(chain[,1:5])
+```
+
+![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-9-1.png)<!-- -->![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
+
+
+```r
+ex = extract(sat)
+m_ind = which.max(ex$lp__)
+W = ex$W[m_ind,,]
+
+pred = t(apply(W, 1, softmax))
+ll = sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+
+lls =
+  sapply(sample.int(dim(ex$W)[1], 2000), function(i) { sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(t(apply((ex$W[i,,]), 1, softmax))[k,]+10e-5), log = T))) })
+
+DIC = var(-2 * lls)/2 -2 * mean(lls)
+
+n_pars = length(as.vector(W))
+cat("Multinomial LogLikelihood: ", ll, "\n",
+    "AIC: ", 2*n_pars-2*ll, "\n",
+    "DIC: ", DIC, "\n",
+    "N_pars: ", n_pars)
+```
+
+```
+## Multinomial LogLikelihood:  -932.5497 
+##  AIC:  6113.099 
+##  DIC:  2580.396 
+##  N_pars:  2124
+```
+
+```r
+saveRDS(list(pred = pred, coef = W), "TransferTraitDemo2/results/saturated.RDS")
+```
+
+
+## sjSDM -BT
+
+
+```r
+sjSDM = readRDS("mcmc_sjSDM2.RDS")
+```
+
+
+## sjSDM
+Traceplots and psrf distribution of parameters
+
+```r
+plot(sjSDM, whichParameters=1:5)
+```
+
+![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-12-1.png)<!-- -->![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-12-2.png)<!-- -->
+
+```r
+par(mfrow = c(1,1))
+hist(gelmanDiagnostics(sjSDM)$psrf[,1])
+abline(v = 1.2, col = "red")
+```
+
+![](SDM-and-jSDM-results_files/figure-html/unnamed-chunk-12-3.png)<!-- -->
+
+
+```r
+torch$cuda$empty_cache()
+map = MAP(sjSDM)$parametersMAP
+pred = pred_sjSDM(map)
+ll = sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+
+samples = getSample(sjSDM, numSamples = 2000L)
+```
+
+```
+## Warning: Due to internal chains, numSamples was rounded to the next number
+## divisble by the number of chains.
+```
+
+```r
+lls <- sapply(1:2000, function(i){
+  pred = pred_sjSDM( samples[i,] )
+  sum(sapply(1:nrow(ixp), function(k) dmultinom(x = ixp[k,], prob = unlist(pred[k,]+10e-5), log = T)))
+})
+
+DIC = var(-2 * lls)/2 -2 * mean(lls)
+n_pars = length(map)
+cat("Multinomial LogLikelihood: ", ll, "\n",
+    "AIC: ", 2*n_pars-2*ll, "\n",
+    "DIC: ", DIC, "\n",
+    "N_pars: ", n_pars)
+```
+
+```
+## Multinomial LogLikelihood:  -2749.915 
+##  AIC:  6915.83 
+##  DIC:  43845.09 
+##  N_pars:  708
+```
+
+```r
+saveRDS(list(pred = pred, coef = matrix(map[1:(e*sp)], e, sp)), "TransferTraitDemo2/results/sjSDM_BT.RDS")
+```
+
