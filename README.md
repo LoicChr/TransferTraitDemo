@@ -13,6 +13,19 @@ lib/likelihood.R contains the likelihood function to optimize
 lib/LV_model_wrapped.cpp contains the ODE model. It is coded in C++ and uses the boost libraries
 lib/trait2demo.R contains the transfer function that estimates demographic parameters from functional traits.
 
+main/GLM_stan.R is the script to run the SDM model.
+main/LVM_stan.R is the script to run the latent variable model (jSDM).
+main/saturated_stan.R is the script to run the saturated model.
+main/sjSDM_BT.R is the script to run the sjSDM model with MCMC sampling.
+main/sjSDM_MLE.R is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:
+```r
+devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="multinomial", subdir = "sjSDM")
+```
+
+lib/glm.stan contains the stan model for the SDM.
+lib/lvm.stan contains the stan model for the latent variable model (jSDM).
+lib/saturated.stan contains the stan model for the saturated model.
+
 ## Data file : data/data.Rdata
 This Rdata file contains the following objects
 - ixp: a matrix with plot as rows and species as columns. The matrice entries contains the number of individuals of each species sampled in each plot.
