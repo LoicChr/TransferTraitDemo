@@ -1,5 +1,5 @@
 # TransferTraitDemo
-Scripts to use the methodology of 'Linking functional traits to demographic parameters in high-diversity community models' by Loïc Chalmandrier*, Florian Hartig, Daniel Laughlin, Heike Lischke, Daniel Stouffer & Loïc Pellissier
+Scripts to use the methodology of 'Linking functional traits to demographic parameters in high-diversity community models' by Loïc Chalmandrier*, Florian Hartig, Daniel Laughlin, Heike Lischke, Maximilian Pichler, Daniel Stouffer & Loïc Pellissier
 * main code contributor
 
 The present code allows to calibrate a community model on a mountain grassland dataset via functional traits. The method assumes a linear relationship between functional traits and the demographic parameters of the community model with a transfer function. Through Bayesian inference it then calibrates the transfer function to best reproduce observed species abundances.  
