@@ -8,6 +8,7 @@ The present code allows to calibrate a community model on a mountain grassland d
 main/obs.R is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script.
 main/prior.R contains the specification of the prior. It is directly called by main/obs.R
 main/output_analysis.R contains a small script to visualize the results of main/obs.R that are stored in results/obs/
+main/figures.R contains a script to generate the figures 2 to 4 (stored in ./figures) of the manuscript as well as the source data (stored in the ./SourceData)
 
 lib/likelihood.R contains the likelihood function to optimize
 lib/LV_model_wrapped.cpp contains the ODE model. It is coded in C++ and uses the boost libraries
