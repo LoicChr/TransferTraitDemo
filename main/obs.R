@@ -41,4 +41,3 @@ settings <- list(iterations = 50000*3, nrChains = 1)
 
 out <- runMCMC(bayesianSetup = bayesianSetup, settings = settings)
 save(list = ls(), file = paste0(result_file, "/obs_chain", id, ".Rdata"))
--2300

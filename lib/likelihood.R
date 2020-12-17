@@ -4,7 +4,8 @@
 #                                                 #
 ###################################################
 
-likelihood<- function(pars, pred.mat = F){
+
+likelihood<- function(pars, pred.mat = F, sum = T){
   names(pars) <- list_params
   pars[c("Tmin_phi1", "c_phi1", "l_phi1")] <- acos(pars[c("Tmin_phi1", "c_phi1", "l_phi1")])
   
@@ -32,7 +33,7 @@ likelihood<- function(pars, pred.mat = F){
   dt <- 0.05 # dt doesn't seems to do anything as the integration is adaptive
   site <- as.numeric(unique(env))
   S <- length(site)
-  logLik <- 0
+  logLik <- numeric(length = length(env))
   pred <- matrix(0, nrow = S, ncol = N)
   for (i in S:1){
     r <- as.numeric(demo[, "g"]*(site[i] - demo[,"Tmin"]))
@@ -42,18 +43,23 @@ likelihood<- function(pars, pred.mat = F){
       init <- (runif(N)*K)[x]
       out <- integrateModel(init, r[x]*10^-1, A[x,x]*10^-1,t0, t1, dt)
       pred[i,x]<- unlist(out[nrow(out),-1]/sum(out[nrow(out),-1]))
-      logLik <- logLik+ sum(sapply(which(env == site[i]), function(k)  dmultinom(x = ixp[k,], prob = unlist(pred[i,]+10e-5), log = T)))
+      logLik[which(env == site[i])] <- sapply(which(env == site[i]), function(k)  dmultinom(x = ixp[k,], prob = unlist(pred[i,]+10e-5), log = T))
       } else if (sum(x) == 1){                                          
       pred[i,x]<- 1
-      logLik <- logLik+ sum(sapply(which(env == site[i]), function(k)  dmultinom(x = ixp[k,], prob = unlist(pred[i,]+10e-5), log = T)))
+      logLik[which(env == site[i])] <- sapply(which(env == site[i]), function(k)  dmultinom(x = ixp[k,], prob = unlist(pred[i,]+10e-5), log = T))
       }
-    else{logLik <- -Inf; break}
+    else{logLik[which(env == site[i])] <- -Inf;}
   }
   if (pred.mat){
     pred <- pred[gl(9,2),]
     return(pred)
   }else{
-    return(logLik)
+    if (sum){
+      return(sum(logLik))
+    }else{
+      return(logLik)
+    }
+
   }
 }
 
