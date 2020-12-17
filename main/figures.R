@@ -59,7 +59,7 @@ cor_mats <- apply(postDis, 1, function(pars){
 cor_trait_array <- do.call(abind, list(map(cor_mats, 1), along = 3))
 cor_trait_tab <- do.call(rbind, lapply(map(cor_mats, 1), as.numeric))
 colnames(cor_trait_tab) <- paste(rep(colnames(spxt),3), c("l", "c", "Tmin")[gl(3, ncol(spxt))], sep ="_")
-write.csv(postDis, file = "SourceData/Figure3A.csv", row.names = F)
+write.csv(cor_trait_tab, file = "SourceData/Figure3A.csv", row.names = F)
 
 cor_trait_array_med <- apply(cor_trait_array, c(1,2), quantile, probs = c(0.025,0.5, 0.975))
 
@@ -78,8 +78,6 @@ jpeg("./figures/Figure3.jpeg", width = 27, height = 12, units = 'in', res = 600)
 par(oma = c(1,0,1,2), mar =c(5,0,5,5) )
 layout(matrix(c(1,1,1,2,2), nrow = 1, byrow = T))
 cor_med <- cor_trait_array_med[2,,]
-cor_lower <- cor_trait_array_med[1,,]
-cor_upper <- cor_trait_array_med[3,,]
 colnames(cor_med) <- c("min. tol. Temperature", "Sensitivity to biomass", "Intra. compet.")
 row.names(cor_med) <- c("Reproductive height", "Vegetative Height","Specific leaf area", "Leaf dry matter content", "Leaf carbon content", "Leaf nitrogen content", "$Leaf~delta^{13}~C", "$Leaf~delta^{15}~N")
 corrplot(cor_med, method= "circle", cl.pos = "n",number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette(200), addCoef.col = "black", tl.col = "black")
@@ -87,8 +85,6 @@ mtext("(A)", 2, adj=6, las=1, padj=-9, line =  -25, cex = 2)
 
 cor_med <-cor_demo_array_med [2,,]
 cor_med[upper.tri(cor_med, diag = T)] <- NA
-cor_lower <- cor_demo_array_med [1,,]
-cor_upper <-cor_demo_array_med [3,,]
 colnames(cor_med) <- row.names(cor_med) <- c("min. tol. Temperature", "Sensitivity to biomass", "Intra. compet.")
 corrplot(cor_med, method= "circle", cl.pos = "n",na.label = " ", number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette(200), diag = T, addCoef.col = "black", tl.col = "black")
 mtext("(B)", 2, adj=6, las=1, padj=-9, line = -25, cex = 2)
@@ -99,6 +95,7 @@ dev.off()
 pars.med <- apply(postDis, 2, median)
 demo.med <- demoRates(pars.med)[,c("Tmin", "l", "c")]
 demo.med$FG <- FG$FG
+demo.med$species <- row.names(FG)
 pairwise.t.test(demo.med[,1] , FG$FG)
 pairwise.t.test(demo.med[,2] , FG$FG)
 pairwise.t.test(demo.med[,3] , FG$FG)
@@ -130,6 +127,7 @@ H0 <- apply(ixp, 1, function(x){
 pred2 <- pred_uni
 pred2$temp <- temp_uni
 Fig2A_dat <- pivot_longer(data= as.data.frame(pred2), cols = contains("Sp"), names_to = "species")
+colnames(Fig2A_dat) <- c("temp", "species", "relAb")
 write.csv(Fig2A_dat, file = "SourceData/Fig2A.csv", row.names = F)
 
 # Data figure 2B
