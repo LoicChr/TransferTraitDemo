@@ -21,6 +21,7 @@ main/sjSDM_MLE.R is the script to run the sjSDM (jSDM) model. To run the sjSDM w
 ```r
 devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="multinomial", subdir = "sjSDM")
 ```
+main/comparative_analysis.R is the script to produce Supplemenentary figures 6 and 7
 
 lib/glm.stan contains the stan model for the SDM.
 lib/lvm.stan contains the stan model for the latent variable model (jSDM).
