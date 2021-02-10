@@ -9,6 +9,7 @@ library(purrr)
 library(abind)
 library(corrplot)
 library(beeswarm)
+library(tidyr)
 
 ## Empirical functional traits
 load("data/data.Rdata")
@@ -81,13 +82,13 @@ cor_med <- cor_trait_array_med[2,,]
 colnames(cor_med) <- c("min. tol. Temperature", "Sensitivity to biomass", "Intra. compet.")
 row.names(cor_med) <- c("Reproductive height", "Vegetative Height","Specific leaf area", "Leaf dry matter content", "Leaf carbon content", "Leaf nitrogen content", "$Leaf~delta^{13}~C", "$Leaf~delta^{15}~N")
 corrplot(cor_med, method= "circle", cl.pos = "n",number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette(200), addCoef.col = "black", tl.col = "black")
-mtext("(A)", 2, adj=6, las=1, padj=-9, line =  -25, cex = 2)
+mtext("(a)", 2, adj=6, las=1, padj=-9, line =  -25, cex = 2, font = 2)
 
 cor_med <-cor_demo_array_med [2,,]
 cor_med[upper.tri(cor_med, diag = T)] <- NA
 colnames(cor_med) <- row.names(cor_med) <- c("min. tol. Temperature", "Sensitivity to biomass", "Intra. compet.")
 corrplot(cor_med, method= "circle", cl.pos = "n",na.label = " ", number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette(200), diag = T, addCoef.col = "black", tl.col = "black")
-mtext("(B)", 2, adj=6, las=1, padj=-9, line = -25, cex = 2)
+mtext("(b)", 2, adj=6, las=1, padj=-9, line = -25, cex = 2, font = 2)
 dev.off()
 
 
@@ -99,8 +100,6 @@ demo.med$species <- row.names(FG)
 pairwise.t.test(demo.med[,1] , FG$FG)
 pairwise.t.test(demo.med[,2] , FG$FG)
 pairwise.t.test(demo.med[,3] , FG$FG)
-
-
 write.csv(demo.med, file = "SourceData/Figure4.csv", row.names = F)
 
 tests <- list(c('a', 'a', 'a', 'b'), c('a', 'a', 'a', 'b'), c('a', 'b', 'b', 'ab'))
@@ -111,6 +110,7 @@ for (i in 1:3){
   boxplot(demo.med[,i] ~ FG$FG,las = 2, main = c("min. tol. Temperature","Sensitivity to biomass rate (log)", "Intraspecific competition rate (log)")[i], xlab = '',type ="n", ylim = c(min(demo.med[,i]),min(demo.med[,i])+diff(range(demo.med[,i]))*1.2), outline = FALSE, border = gray(0.25))
   beeswarm(demo.med[,i] ~ FG$FG, type = "square", pch = 21, add = T,col = "black", bg= c("lightblue", "lightpink", "lightgreen", "peru"), method = "center", cex = 0.9, xlab = '')
   text(c(1,2,3,4), y = min(demo.med[,i])+diff(range(demo.med[,i]))*1.05, labels = tests[[i]], pos = 3, cex = 1.)
+  mtext(paste0('(',letters[i], ')'), 2, adj=6, las=1, padj=-10, line = -5, cex = 1.1, font = 2)
 }
 dev.off()
 
@@ -138,6 +138,7 @@ Fig2B_dat <- data.frame(plot = names(temp), temp = temp, obs = R2.obs, NM_95 = a
 write.csv(Fig2B_dat, file = "SourceData/Fig2B.csv", row.names = F)
 
 cols <- c("cornflowerblue", "indianred2", "chartreuse4", "peru")
+
 jpeg("figures/Figure2.jpeg", width = 7*3.5, height = 19*2/3, units = "cm", res = 600)
 par(mfrow = c(1,2), cex = 1., mar = c(5.5, 4.5, 2, 1), cex.main= 1, oma = c(1,1,1,1), cex.axis = 0.95)
 plot(temp_uni, pred_uni[,1], type = "n", ylim = range(pred), main = "Modeled species relative abundance", xlab = "", ylab ="Relative abundance")
@@ -149,7 +150,7 @@ for (i in which(colSums(pred > 0.03) > 0)){
   points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l", col = cols[FG$FG[i]], lwd = 1.5)
 }
 mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 4.2)
-mtext("(A)", 2, adj=0, las=1, padj=-9, line =  4, cex = 1.4)
+mtext("(a)", 2, adj=7, las=1, padj=-13, line =  -5, cex = 1.1, font = 2)
 legend("topright", cex = 0.8,legend = levels(FG$FG), col = cols, lwd = 2)
 
 x <-order(temp)
@@ -163,5 +164,5 @@ points(at.x, R2.obs[x], bg = cols[2], pch = 23, cex = 1.4)
 points(at.x, apply(NM.lls, 1, quantile, probs = 0.95), bg = cols[1], pch = 24, cex = 1.2)
 abline(v = seq(3, 24,by = 3), lty = 2, col = "gray", lwd= 2)
 abline(h = 0, lty = 4, lwd= 2)
-mtext("(B)", 2, adj=0, las=1, padj=-9, line =  4, cex = 1.4)
+mtext("(b)", 2, adj=7, las=1, padj=-13, line =  -5, cex = 1.1, font = 2)
 dev.off()
