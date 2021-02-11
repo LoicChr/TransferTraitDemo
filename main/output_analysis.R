@@ -19,6 +19,7 @@ plot(McmcSamplerList)
 postDis <- getSample(McmcSamplerList, start = 35000, thin= 250, parametersOnly = F)
 write.csv(postDis, file = "SourceData/posterior.csv", row.names = F)
 
+
 # Convergence
 gelmanDiagnostics(McmcSamplerList, start = 35000)
 

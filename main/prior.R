@@ -6,7 +6,7 @@
 
 list_params <- apply(expand.grid(c("Tmin", "l", "c"), c("phi1", "phi2", "a", "b"), stringsAsFactors = F), 1, paste, collapse = "_")
 list_params <- list_params[-which(list_params %in% c("c_b"))]  
-source("main/prior_shape.R")
+
 
 # Parametrization of the prior for non-correlation parameters
 Tmin_a_args <- c(mean = log(0.9), sd= 0.2)
