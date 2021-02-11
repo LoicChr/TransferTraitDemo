@@ -128,7 +128,8 @@ H0 <- apply(ixp, 1, function(x){
 pred2 <- pred_uni
 pred2$temp <- temp_uni
 Fig2A_dat <- pivot_longer(data= as.data.frame(pred2), cols = contains("Sp"), names_to = "species")
-colnames(Fig2A_dat) <- c("temp", "species", "relAb")
+colnames(Fig2A_dat) <- c("temp", "SpeciesCode", "relAb")
+Fig2A_dat <- cbind(Fig2A_dat, FG[Fig2A_dat$SpeciesCode,])
 write.csv(Fig2A_dat, file = "SourceData/Fig2A.csv", row.names = F)
 
 # Data figure 2B
@@ -169,3 +170,4 @@ abline(v = seq(3, 24,by = 3), lty = 2, col = "gray", lwd= 2)
 abline(h = 0, lty = 4, lwd= 2)
 mtext("b", 2, adj=7, las=1, padj=-13, line =  -5, cex = 1.1, font = 2)
 dev.off()
+
