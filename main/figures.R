@@ -76,20 +76,20 @@ write.csv(cor_demo_tab, file = "SourceData/Figure3B.csv", row.names = F)
 colPalette <- brewer.pal(11, "RdBu")[-c(1,2,10,11)]
 
 # Figure 3 ----------------------------------------------------------------
-jpeg("./figures/Figure3.jpeg", width = 27, height = 12, units = 'in', res = 600)
-par(oma = c(1,0,1,2), mar =c(5,0,5,5) )
+cairo_ps("./figures/Figure3.eps", width = 9, height = 4.5)
 layout(matrix(c(1,1,1,2,2), nrow = 1, byrow = T))
+par(xpd = TRUE)
 cor_med <- cor_trait_array_med[2,,]
-colnames(cor_med) <- c("min. tol. temperature", "Sensitivity to biomass", "Intra. compet.")
+colnames(cor_med) <- c("Minimum tolerated temperature", "Sensitivity to biomass", "Intraspecific competition rate")
 row.names(cor_med) <- c("Reproductive height", "Vegetative height","Specific leaf area", "Leaf dry matter content", "Leaf carbon content", "Leaf nitrogen content", "$Leaf~delta^{13}~C", "$Leaf~delta^{15}~N")
-corrplot(cor_med, method= "circle", cl.pos = "n",number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette , addCoef.col = "black", tl.col = "black")
-mtext("a", 2, adj=6, las=1, padj=-9, line =  -25, cex = 2, font = 2)
-
+corrplot(cor_med, method= "circle", cl.pos = "n",number.cex=0.9,mar = c(0,0,2,0), asp = 0.2, cl.cex = 0.9, cl.align.text = "l", tl.cex = 0.8, col = colPalette , addCoef.col = "black", tl.col = "black")
+mtext("a", 2, adj=6, las=1, padj=-9, line = -2, cex = 0.8, font = 2)
+par(xpd = TRUE)
 cor_med <-cor_demo_array_med [2,,]
 cor_med[upper.tri(cor_med, diag = T)] <- NA
-colnames(cor_med) <- row.names(cor_med) <- c("min. tol. Temperature", "Sensitivity to biomass", "Intra. compet.")
-corrplot(cor_med, method= "circle", cl.pos = "n",na.label = " ", number.cex=2.5, cl.cex = 2.3, cl.align.text = "l", tl.cex = 2.6, col = colPalette , diag = T, addCoef.col = "black", tl.col = "black")
-mtext("b", 2, adj=6, las=1, padj=-9, line = -25, cex = 2, font = 2)
+colnames(cor_med) <- row.names(cor_med) <- c("Minimum tolerated temperature", "Sensitivity to biomass", "Intraspecific competition rate")
+corrplot(cor_med, method= "circle", cl.pos = "n",na.label = " ",number.cex=0.9,mar = c(0,0,0,0), cl.cex =0.9, cl.align.text = "l", tl.cex = 0.8, col = colPalette , diag = T, addCoef.col = "black", tl.col = "black")
+mtext("b", 2, adj=6, las=1, padj=-9, line = -2, cex = 0.8, font = 2)
 dev.off()
 
 
@@ -98,20 +98,25 @@ pars.med <- apply(postDis, 2, median)
 demo.med <- demoRates(pars.med)[,c("Tmin", "l", "c")]
 demo.med$FG <- FG$FG
 demo.med$species <- row.names(FG)
+write.csv(demo.med, file = "SourceData/Figure4.csv", row.names = F)
+
 pairwise.t.test(demo.med[,1] , FG$FG)
 pairwise.t.test(demo.med[,2] , FG$FG)
 pairwise.t.test(demo.med[,3] , FG$FG)
-write.csv(demo.med, file = "SourceData/Figure4.csv", row.names = F)
+tests <- list(c('ab', 'a', 'a', 'b'), c('a', 'a', 'a', 'b'), c('a', 'b', 'b', 'ab'))
 
-tests <- list(c('a', 'a', 'a', 'b'), c('a', 'a', 'a', 'b'), c('a', 'b', 'b', 'ab'))
+anova(lm(demo.med[,1] ~ FG$FG))
+anova(lm(demo.med[,2] ~ FG$FG))
+anova(lm(demo.med[,3] ~ FG$FG))
 
-jpeg("./figures/Figure4.jpg", width = 4, height = 10.5, units = "in", res = 600)
+
+cairo_ps("./figures/Figure4.eps", width = 3.5, height = 10.5)
 par(mfrow = c(3,1), mar = c(3.8,3,3,1), cex = 1., cex.main = 1., cex.axis = 0.8)
 for (i in 1:3){
   boxplot(demo.med[,i] ~ FG$FG,las = 2, main = c("min. tol. Temperature","Sensitivity to biomass rate (log)", "Intraspecific competition rate (log)")[i], xlab = '',type ="n", ylim = c(min(demo.med[,i]),min(demo.med[,i])+diff(range(demo.med[,i]))*1.2), outline = FALSE, border = gray(0.25))
   beeswarm(demo.med[,i] ~ FG$FG, type = "square", pch = 21, add = T,col = "black", bg= c("#6699CC", "#CC6677", "#117733", "#DDCC77"), method = "center", cex = 0.9, xlab = '')
   text(c(1,2,3,4), y = min(demo.med[,i])+diff(range(demo.med[,i]))*1.05, labels = tests[[i]], pos = 3, cex = 1.)
-  mtext(letters[i], 2, adj=6, las=1, padj=-10, line = -5, cex = 1.1, font = 2)
+  mtext(letters[i], 2, adj=6, las=1, padj=-10, line = -1, cex = 1.1, font = 2)
 }
 dev.off()
 
@@ -143,18 +148,18 @@ write.csv(Fig2B_dat, file = "SourceData/Fig2B.csv", row.names = F)
 # Color palette
 cols <-  c("#6699CC", "#CC6677", "#117733", "#DDCC77")
 
-jpeg("figures/Figure2.jpeg", width = 7*3.5, height = 19*2/3, units = "cm", res = 600)
-par(mfrow = c(1,2), cex = 1., mar = c(5.5, 4.5, 2, 1), cex.main= 1, oma = c(1,1,1,1), cex.axis = 0.95)
+cairo_ps("figures/Figure2.eps", width = 7.5, height = 4)
+par(mfrow = c(1,2), cex = 1., mar = c(4.5, 4.5, 2, 1), cex.main= 1, oma = c(1,1,1,1), cex.axis = 0.95)
 plot(temp_uni, pred_uni[,1], type = "n", ylim = range(pred), main = "Modeled species relative abundance", xlab = "", ylab ="Relative abundance")
 for (i in which(colSums(pred > 0.03) == 0)){ 
   x <- order(temp_uni)
-  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l", col = 'lightgray', lwd = 1.5)
+  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l", col = 'lightgray', lwd = 1)
 }
 for (i in which(colSums(pred > 0.03) > 0)){ 
-  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l",col = cols[FG$FG[i]], lwd = 2.5)
+  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l",col = cols[FG$FG[i]], lwd = 1.2)
 }
-mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 4.2)
-mtext("a", 2, adj=7, las=1, padj=-13, line =  -5, cex = 1.1, font = 2)
+mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 3.5)
+mtext("a", 2, adj=7, las=1, padj=-13, line =  -2, cex = 1.1, font = 2)
 legend("topright", cex = 0.8,legend = levels(FG$FG), col = cols, lwd = 2.5)
 
 x <-order(temp)
@@ -163,11 +168,11 @@ bxp<-boxplot(lapply((1:nrow(NM.lls))[x], function(i) NM.lls[i,]),
              outline = F, ylim = c(min(R2.obs),1), col = "white", border="white",
              xaxt ="n", ylab = expression(paste("Pseudo R"^"2")), at = at.x, main = "Model performance")
 axis(side = 1, at = seq(1.5, 25.5,by = 3), labels = as.character(round(unique(temp)[order(unique(temp))],2)), las = 2)
-mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 4.2)
-points(at.x, R2.obs[x], bg = cols[2], pch = 23, cex = 1.4)
-points(at.x, apply(NM.lls, 1, quantile, probs = 0.95), bg = cols[1], pch = 24, cex = 1.2)
+mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 3.5)
+points(at.x, R2.obs[x], bg = cols[2], pch = 23, cex = 1.2, lwd = 0.8)
+points(at.x, apply(NM.lls, 1, quantile, probs = 0.95), bg = cols[1], pch = 24, cex = 1.2, lwd = 0.8)
 abline(v = seq(3, 24,by = 3), lty = 2, col = "gray", lwd= 2)
 abline(h = 0, lty = 4, lwd= 2)
-mtext("b", 2, adj=7, las=1, padj=-13, line =  -5, cex = 1.1, font = 2)
+mtext("b", 2, adj=7, las=1, padj=-13, line =  -2, cex = 1.1, font = 2)
 dev.off()
 

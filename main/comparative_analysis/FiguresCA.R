@@ -10,7 +10,7 @@ files <- c("results//jSDM_LVM.RDS","results//SDM.RDS","results//sjSDM_BT.RDS","r
 load("data/species_PA.Rdata")
 library(pROC)
 library(purrr)
-
+library(rcartocolor)
 out = lapply(1:length(files), function(i){
   out.sdm = readRDS(files[i])
   #Pseudo R2

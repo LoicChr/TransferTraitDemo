@@ -27,11 +27,19 @@ par(mfrow = c(1,1), cex = 1., cex.main = 1., cex.axis = 0.8)
   abline(line(species.temp, dudi.tr$li[,1]))
 dev.off()
 
-reg <- lm(dudi.tr$li[,4] ~ relevel(FG[,2], ref = "Legumes"))
-tests <- list(c('a', 'a', 'a', 'b'), c('a', 'b', 'b', 'b'), c('a', 'b', 'c', 'c'), c("a","ab","a","b"))
+pairwise.t.test(dudi.tr$li[,1] , FG$FG)
+pairwise.t.test(dudi.tr$li[,2] , FG$FG)
+pairwise.t.test(dudi.tr$li[,3] , FG$FG)
+pairwise.t.test(dudi.tr$li[,4] , FG$FG)
+tests <- list(c('a', 'ab', 'a', 'b'), c('a', 'b', 'b', 'b'), c('a', 'b', 'c', 'c'), c("a","a","a","a"))
 
-jpeg("./figures/FigureS2.jpg", width = 13.5, height = 4.5, units = "in", res = 600)
-par(mfrow = c(1,4), mar = c(3.8,3,3,1), cex = 1., cex.main = 1., cex.axis = 0.8)
+anova(lm(dudi.tr$li[,1] ~ FG$FG))
+anova(lm(dudi.tr$li[,2] ~ FG$FG))
+anova(lm(dudi.tr$li[,3] ~ FG$FG))
+anova(lm(dudi.tr$li[,4] ~ FG$FG))
+
+jpeg("./figures/FigureS2.jpg", width = 8.5, height = 8.5, units = "in", res = 600)
+par(mfrow = c(2,2), mar = c(3.8,3,3,1), cex = 1., cex.main = 1., cex.axis = 0.8)
 for (i in 1:4){
   boxplot(dudi.tr$li[,i] ~ FG[,2],las = 2, main = paste("PCA axis", i), xlab = '',type ="n", ylim = c(min(dudi.tr$li[,i]),min(dudi.tr$li[,i])+diff(range(dudi.tr$li[,i]))*1.2), outline = FALSE, border = gray(0.25))
   beeswarm(dudi.tr$li[,i] ~ FG[,2], type = "square", pch = 21, add = T,col = "black", bg= c("lightblue", "lightpink", "lightgreen", "peru"), method = "center", cex = 0.9, xlab = '')
