@@ -1,8 +1,8 @@
-#########################################################################
-#                                                                       #
-#     Main script to fit the community model with functional traits     #
-#                                                                       #
-#########################################################################
+################################################################################################
+#                                                                                              #
+#     Null model: main script to fit the community model with randomized functional traits     #
+#                                                                                              #
+################################################################################################
 setwd("./TransferTraitDemo/")
 
 library(BayesianTools)
