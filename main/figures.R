@@ -12,16 +12,7 @@ library(beeswarm)
 library(tidyr)
 library(RColorBrewer)
 
-## Empirical functional traits
-load("data/data.Rdata")
-spxt_log <- spxt
-spxt_log[,1:6] <-apply(spxt_log[,1:6], 2, log)
-spxt_log2 <- apply(spxt_log, 2, function(x){
-  x[is.na(x)] <- mean(x, na.rm = T)
-  x
-})
-dudi.tr <- dudi.pca(spxt_log2, nf = 4, scannf = F)
-tr <- apply(dudi.tr$li, 2, scale)
+source("main/Data_prep.R")
 
 # load results
 load("results/obs/pred.Rdata")
@@ -135,14 +126,13 @@ pred2$temp <- temp_uni
 Fig2A_dat <- pivot_longer(data= as.data.frame(pred2), cols = contains("Sp"), names_to = "species")
 colnames(Fig2A_dat) <- c("temp", "SpeciesCode", "relAb")
 Fig2A_dat <- cbind(Fig2A_dat, FG[Fig2A_dat$SpeciesCode,])
-write.csv(Fig2A_dat, file = "SourceData/Fig2A.csv", row.names = F)
+write.csv(Fig2A_dat, file = "SourceData/Figure2A.csv", row.names = F)
 
 # Data figure 2B
-load("results/NM/Lls.Rdata")
 R2.obs <-  (1-exp(2/rowSums(ixp)*(H0-logLik)))/(1-exp(2/rowSums(ixp)*(H0)))
 NM.lls <- read.table("results/NM/Lls.txt", header = F)
 Fig2B_dat <- data.frame(plot = names(temp), temp = temp, obs = R2.obs, NM_95 = apply(NM.lls, 2, quantile, probs = 0.95))
-write.csv(Fig2B_dat, file = "SourceData/Fig2B.csv", row.names = F)
+write.csv(Fig2B_dat, file = "SourceData/Figure2B.csv", row.names = F)
 
 
 # Color palette
@@ -153,10 +143,10 @@ par(mfrow = c(1,2), cex = 1., mar = c(4.5, 4.5, 2, 1), cex.main= 1, oma = c(1,1,
 plot(temp_uni, pred_uni[,1], type = "n", ylim = range(pred), main = "Modeled species relative abundance", xlab = "", ylab ="Relative abundance")
 for (i in which(colSums(pred > 0.03) == 0)){ 
   x <- order(temp_uni)
-  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l", col = 'lightgray', lwd = 1)
+  points(temp_uni[x], pred_uni[x,i], type = "l", col = 'lightgray', lwd = 1)
 }
 for (i in which(colSums(pred > 0.03) > 0)){ 
-  points(temp_uni[x], pred_uni[x,i], alpha = 0.8, type = "l",col = cols[FG$FG[i]], lwd = 1.2)
+  points(temp_uni[x], pred_uni[x,i], type = "l",col = cols[FG$FG[i]], lwd = 1.2)
 }
 mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 3.5)
 mtext("a", 2, adj=7, las=1, padj=-13, line =  -2, cex = 1.1, font = 2)

@@ -30,4 +30,4 @@ Rcpp::sourceCpp('lib/LV_model_wrapped.cpp')
 settings <- list(iterations = 50000*3, nrChains = 1)
 
 out <- runMCMC(bayesianSetup = bayesianSetup, settings = settings)
-save(list =   c("settings", "out", "bayesianSetup", "density", "sampler", "bounds","Tmin_a_args","l_a_args","c_a_args","Tmin_b_args" ,"l_b_args"), file = paste0("results/obs/obs_chain", id, ".Rdata"))
+save(list =   c("out"), file = paste0("results/obs/obs_chain", id, ".Rdata"))

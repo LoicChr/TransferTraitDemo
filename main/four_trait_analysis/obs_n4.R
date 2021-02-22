@@ -27,9 +27,6 @@ bayesianSetup <- createBayesianSetup(LLpar, prior, names = list_params, parallel
 
 Rcpp::sourceCpp('lib/LV_model_wrapped.cpp')
 
-result_file <- "results_exp13/obs_n4_cons"
-if (!file.exists(result_file)) dir.create(result_file, recursive = T)
-
 # # settings for the sampler
 settings <- list(iterations = 100000*3, nrChains = 1)
 

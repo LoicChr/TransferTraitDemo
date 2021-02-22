@@ -5,18 +5,7 @@
 ###################################
 library(ppcor)
 
-### Dataset
-load("data/data.Rdata")
-env <- scale(temp)
-
-# Main trait axes
-spxt_log <- spxt
-spxt_log[,1:6] <-apply(spxt_log[,1:6], 2, log)
-spxt_log <- apply(spxt_log, 2, function(x){
-  x[is.na(x)] <- mean(x, na.rm = T)
-  x
-})
-dudi.tr <- dudi.pca(spxt_log, nf = 4, scannf = F)
+source("main/Data_prep.R")
 
 species.temp <- apply(ixp, 2, function(x){
   weighted.mean(temp, x)
@@ -50,7 +39,7 @@ dev.off()
 
 #SourceData
 FigS1S2_dat <- data.frame(SpeciesCode = row.names(dudi.tr$li), dudi.tr$li[,1:4], FG, TempNiche = species.temp)
-write.csv(FigS1S2_dat, file = "SourceData/FigS1S2.csv", row.names = F)
+write.csv(FigS1S2_dat, file = "SourceData/FigureS1S2.csv", row.names = F)
 
 TabS1_dat <- data.frame(Trait = row.names(dudi.tr$co), dudi.tr$co[,1:4])
 colnames(TabS1_dat)[2:5] <- paste0('Axis',1:4)
@@ -58,6 +47,10 @@ TabS1_dat<-rbind(TabS1_dat, c("Explained variance", dudi.tr$eig[1:4]))
 write.csv(TabS1_dat, file = "SourceData/TabS1.csv", row.names = F)
 
 ### Figure S3
+N <- 500
+t1 <- rnorm(N)
+t2 <- rnorm(N)
+t3 <- rnorm(N)
 phi1 <- acos(runif(5000, -1,1))
 phi2 <- runif(5000, 0,2*pi)
 FigS3_dat = as.data.frame(do.call(rbind, lapply(1:5000, function(i){
@@ -82,13 +75,6 @@ plot(FigS3_dat$phi2, FigS3_dat$corT3yT1,xlab = expression(paste(phi[2])), ylab =
   
 mtext( "c", 2, adj=6, las=1, padj=-9, line =  -1, cex = 2.4, font = 2)
 dev.off()
-
-for (i in 1:3){
-  plot(phi1, out[,1])
-  mtext(letters[i], 2, adj=6, las=1, padj=-9, line =  -1, cex = 2.4, font = 2)
-}
-dev.off()
-
 
 #### Figure S4
 phi1 <- runif(5000, 0,pi)
@@ -130,7 +116,6 @@ write.csv(FigS4_dat, file = "SourceData/FigureS4.csv", row.names = F)
 ### Figure S5
 source("main/prior.R")
 postDis <- read.csv(file = "SourceData/posterior.csv")
-postDis <- read.csv(file = "SourceData/prior.csv")
 priorDis <- sampler(nrow(postDis))
 colnames(priorDis) <- list_params
 write.csv(priorDis, file = "SourceData/prior.csv", row.names = F)
