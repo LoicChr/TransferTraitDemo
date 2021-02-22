@@ -4,6 +4,26 @@
 #                                         #
 ###########################################
 library(BayesianTools)
+library(Rcpp)
+library(ade4)
+library(extraDistr)
+source("lib/trait2demo.R")
+source("lib/likelihood.R")
+source("main/prior.R")
+
+### Dataset
+load("data/data.Rdata")
+env <- scale(temp)
+
+# Main trait axes
+spxt_log <- spxt
+spxt_log[,1:6] <-apply(spxt_log[,1:6], 2, log)
+spxt_log <- apply(spxt_log, 2, function(x){
+  x[is.na(x)] <- mean(x, na.rm = T)
+  x
+})
+dudi.tr <- dudi.pca(spxt_log, nf = 3, scannf = F)
+tr <- apply(dudi.tr$li, 2, scale)
 
 chains <- list.files("results/obs/", full.names = T, pattern = "chain")
 load(chains[1])
