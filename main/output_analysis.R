@@ -35,7 +35,7 @@ N <- sum(ixp)
 pseudoR2 <- (1-exp(2/N*(H0-postDis[,"Llikelihood"])))/(1-exp(2/N*H0))
 hist(pseudoR2)
 
-# 
+# Computing the likelihood of the data for each individual plot.
 source("lib/likelihood.R")
 pars <- apply(postDis, 2, median)
 pred <- likelihood(pars, pred.mat = T)

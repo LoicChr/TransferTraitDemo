@@ -140,8 +140,8 @@ write.csv(Fig2A_dat, file = "SourceData/Fig2A.csv", row.names = F)
 # Data figure 2B
 load("results/NM/Lls.Rdata")
 R2.obs <-  (1-exp(2/rowSums(ixp)*(H0-logLik)))/(1-exp(2/rowSums(ixp)*(H0)))
-
-Fig2B_dat <- data.frame(plot = names(temp), temp = temp, obs = R2.obs, NM_95 = apply(NM.lls, 1, quantile, probs = 0.95))
+NM.lls <- read.table("results/NM/Lls.txt", header = F)
+Fig2B_dat <- data.frame(plot = names(temp), temp = temp, obs = R2.obs, NM_95 = apply(NM.lls, 2, quantile, probs = 0.95))
 write.csv(Fig2B_dat, file = "SourceData/Fig2B.csv", row.names = F)
 
 
@@ -164,13 +164,13 @@ legend("topright", cex = 0.8,legend = levels(FG$FG), col = cols, lwd = 2.5)
 
 x <-order(temp)
 at.x <- c(1,2, 4,5, 7,8,10,11,13,14,16,17,19,20, 22,23,25,26)
-bxp<-boxplot(lapply((1:nrow(NM.lls))[x], function(i) NM.lls[i,]), 
+bxp<-boxplot(lapply((1:ncol(NM.lls))[x], function(i) NM.lls[,i]), 
              outline = F, ylim = c(min(R2.obs),1), col = "white", border="white",
              xaxt ="n", ylab = expression(paste("Pseudo R"^"2")), at = at.x, main = "Model performance")
 axis(side = 1, at = seq(1.5, 25.5,by = 3), labels = as.character(round(unique(temp)[order(unique(temp))],2)), las = 2)
 mtext("Mean annual temperature (°C)", side = 1, cex = 1, line = 3.5)
 points(at.x, R2.obs[x], bg = cols[2], pch = 23, cex = 1.2, lwd = 0.8)
-points(at.x, apply(NM.lls, 1, quantile, probs = 0.95), bg = cols[1], pch = 24, cex = 1.2, lwd = 0.8)
+points(at.x, apply(NM.lls, 2, quantile, probs = 0.95), bg = cols[1], pch = 24, cex = 1.2, lwd = 0.8)
 abline(v = seq(3, 24,by = 3), lty = 2, col = "gray", lwd= 2)
 abline(h = 0, lty = 4, lwd= 2)
 mtext("b", 2, adj=7, las=1, padj=-13, line =  -2, cex = 1.1, font = 2)
