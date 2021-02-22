@@ -103,7 +103,7 @@ write.csv(demo.med, file = "SourceData/Figure4.csv", row.names = F)
 pairwise.t.test(demo.med[,1] , FG$FG)
 pairwise.t.test(demo.med[,2] , FG$FG)
 pairwise.t.test(demo.med[,3] , FG$FG)
-tests <- list(c('ab', 'a', 'a', 'b'), c('a', 'a', 'a', 'b'), c('a', 'b', 'b', 'ab'))
+tests <- list(c('AB', 'A', 'A', 'B'), c('A', 'A', 'A', 'B'), c('A', 'B', 'B', 'AB'))
 
 anova(lm(demo.med[,1] ~ FG$FG))
 anova(lm(demo.med[,2] ~ FG$FG))
