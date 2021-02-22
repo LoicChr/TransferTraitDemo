@@ -4,15 +4,7 @@
 #                                                                                           #
 #############################################################################################
 
-list_params <- apply(expand.grid(c("Tmin", "l", "c"), c("phi1", "phi2", "a", "b"), stringsAsFactors = F), 1, paste, collapse = "_")
-list_params <- list_params[-which(list_params %in% c("c_b"))]  
-
-bounds <- data.frame(row.names = list_params, lower = rep(NA, length(list_params)), upper = NA)
-bounds["Tmin_a", ] <- c(0.55,1.5)
-bounds["l_a", ] <- c(0.2,0.74)
-bounds["c_a", ] <- c(0.8,1.5)
-bounds["Tmin_b", ] <- c(-3,-1.7)
-bounds["l_b", ] <- c(-7.1,-5.8)
+source("data/hyperparameters_n3.R")
 
 density = function(par){
   d1 = dunif(par[1], -1, 1, log =TRUE) #Tmin_phi1
