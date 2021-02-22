@@ -14,6 +14,14 @@ c_a_args <- c(alpha = 40, beta = 46)
 Tmin_b_args <- c(mean = -2.37, sd= 0.35)
 l_b_args <- c(mean = -6.5, sd= 0.35)
 
+bounds <- data.frame(row.names = list_params, lower = rep(NA, length(list_params)), upper = NA)
+bounds["Tmin_a", ] <- c(0.55,1.5)
+bounds["l_a", ] <- c(0.2,0.74)
+bounds["c_a", ] <- c(0.8,1.5)
+bounds["Tmin_b", ] <- c(-3,-1.7)
+bounds["l_b", ] <- c(-7.1,-5.8)
+
+
 density = function(par){
   d1 = dunif(par[1], -1, 1, log =TRUE) #Tmin_phi1
   d2 = dunif(par[2], -1, 1, log =TRUE) #l_phi1
