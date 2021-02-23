@@ -21,8 +21,10 @@ spxt_log <- apply(spxt_log, 2, function(x){
 
 
 Fourthcorner <- fourthcorner(as.data.frame(env), as.data.frame(ixp), as.data.frame(spxt_log))
-tab <- summary(Fourthcorner)[,c("Test", "Obs","Std.Obs","Alter","Pvalue","Pvalue.adj")]
-tab[,1] <- gsub("V1 / ","", tab[,1])
-tab[,2] <- gsub(" ","", tab[,2])
-tab[,3] <- gsub(" ","", tab[,3])
+tab <- summary(Fourthcorner)[,c("Test", "Obs","Pvalue","Pvalue.adj")]
+tab[,"Test"] <- gsub("V1 / ","", tab[,"Test"])
+tab[,"Obs"] <- gsub(" ","", tab[,"Obs"])
+tab[,"Pvalue"] <- gsub(" ","", tab[,"Pvalue"])
+tab[,1] <- c("Plant reproductive height (log)","Plant vegetative height (log)", "SLA  (log)", "LDMC (log)", "Leaf carbon content (log)", "Leaf nitrogen content (log)","Leaf d13C","Leaf d15N")
+
 write.table(tab, file = "SourceData/TabS6.csv", quote =F, row.names = F)

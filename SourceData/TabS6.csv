@@ -1,9 +1,9 @@
-Test Obs Std.Obs Alter Pvalue Pvalue.adj
-Hrepro 0.58509 3.8256 two-sided 0.001 0.008
-Hveg 0.60787 3.8375 two-sided 0.001 0.008
-SLA 0.21552 1.8259 two-sided 0.061 0.244
-LDMC -0.17202 -1.4381 two-sided 0.146 0.438
-LCC -0.04213 -0.3335 two-sided 0.744 1.000
-LNC -0.03532 -0.3262 two-sided 0.759 1.000
-LD13C -0.37865 -3.8175 two-sided 0.001 0.008
-LD15N 0.27853 2.3766 two-sided 0.012 0.060
+Test Obs Pvalue Pvalue.adj
+Plant reproductive height (log) 0.58509 0.001 0.008
+Plant vegetative height (log) 0.60787 0.001 0.008
+SLA  (log) 0.21552 0.078 0.312
+LDMC (log) -0.17202 0.173 0.519
+Leaf carbon content (log) -0.04213 0.703 1.000
+Leaf nitrogen content (log) -0.03532 0.749 1.000
+Leaf d13C -0.37865 0.001 0.008
+Leaf d15N 0.27853 0.022 0.110
