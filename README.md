@@ -42,9 +42,9 @@ devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="mu
 **lib/saturated.stan** contains the stan model for the saturated model.
 
 ### Supplementary analyses
-\par The folder main/permutation_analysis/ contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results of each permutation script are stored in *results/obs_132/*, *results/obs_213/*... depending on the trait order.
+\par The folder *main/permutation_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results of each permutation script are stored in *results/obs_132/*, *results/obs_213/*... depending on the trait order.
 
-\par The folder main/four_trait_analysis/ contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results are stored in *results/obs_n4/*
+\par The folder *main/four_trait_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results are stored in *results/obs_n4/* ; the model uses the likelihood function stored in **lib/likelihood_n4.R**
 
 \par The script **main/figuresSI.R** generates the figures S1-S5 and the table S1
 
