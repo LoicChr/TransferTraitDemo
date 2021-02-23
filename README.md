@@ -1,3 +1,5 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # TransferTraitDemo
 Scripts to use the methodology of **'Linking functional traits to demographic parameters in high-diversity community models'** by L. Chalmandrier, F. Hartig, D.C. Laughlin, H. Lischke, M. Pichler, D.B. Stouffer, L. Pellissier;
 
