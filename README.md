@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/312086100.svg)](https://zenodo.org/badge/latestdoi/312086100)
 
 # TransferTraitDemo
 Scripts needed to reproduce the results of **'Linking functional traits to demographic parameters in high-diversity community models'** by L. Chalmandrier, F. Hartig, D.C. Laughlin, H. Lischke, M. Pichler, D.B. Stouffer, L. Pellissier;
