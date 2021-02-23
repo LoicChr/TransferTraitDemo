@@ -416,42 +416,27 @@ summary {
 <div id="transfertraitdemo" class="section level1">
 <h1>TransferTraitDemo</h1>
 <p>Scripts to use the methodology of <strong>‘Linking functional traits to demographic parameters in high-diversity community models’</strong> by L. Chalmandrier, F. Hartig, D.C. Laughlin, H. Lischke, M. Pichler, D.B. Stouffer, L. Pellissier;</p>
-
 <p>The present code allows to calibrate a community model on a mountain grassland dataset via functional traits. The method assumes a linear relationship between functional traits and the demographic parameters of the community model with a transfer function. Through Bayesian inference it then calibrates the transfer function to best reproduce observed species abundances.</p>
-
 <p>All the necessary code to reproduce the analysis in the main manuscript and in the supporting information (including figures, tables and their associated source data).</p>
 <div id="scripts-and-functions" class="section level2">
 <h2>Scripts and functions</h2>
 <div id="main-analysis" class="section level3">
 <h3>Main analysis</h3>
-
 <p><strong>main/obs.R</strong> is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script. The results are stored in <em>results/obs/</em></p>
-
 <p><strong>main/prior.R</strong> contains the specification of the prior. It is directly called by <strong>main/obs.R</strong>.</p>
-
 <p><strong>main/NM.R</strong> is the script to run the calibration procedure with randomized trait values. The results are stored in <strong>results/NM/Lls.txt</strong></p>
-
 <p><strong>main/output_analysis.R</strong> contains a small script to visualize the results of <strong>main/obs.R</strong> that are stored in <em>results/obs/</em></p>
-
 <p><strong>main/figures.R</strong> contains a script to generate the figures 2 to 4 (stored in ./figures) of the manuscript as well as the source data (stored in the ./SourceData)</p>
-
 <p><strong>lib/likelihood.R</strong> contains the likelihood function to optimize for the three traits models</p>
-
 <p><strong>lib/LV_model_wrapped.cpp</strong> contains the ODE model. It is coded in C++ and uses the boost libraries</p>
-
 <p><strong>lib/trait2demo.R</strong> contains the transfer function that estimates demographic parameters from functional traits.</p>
 </div>
 <div id="comparative-analyses" class="section level3">
 <h3>Comparative analyses</h3>
-
-<strong>main/comparative_analysis/GLM_stan.R</strong> is the script to run the SDM model.
-
-<strong>main/comparative_analysis/LVM_stan.R</strong> is the script to run the latent variable model (jSDM).
-
-<strong>main/comparative_analysis/saturated_stan.R</strong> is the script to run the saturated model.
-
-<strong>main/comparative_analysis/sjSDM_BT.R</strong> is the script to run the sjSDM model with MCMC sampling.
-
+<p><strong>main/comparative_analysis/GLM_stan.R</strong> is the script to run the SDM model.</p>
+<p><strong>main/comparative_analysis/LVM_stan.R</strong> is the script to run the latent variable model (jSDM).</p>
+<p><strong>main/comparative_analysis/saturated_stan.R</strong> is the script to run the saturated model.</p>
+<p><strong>main/comparative_analysis/sjSDM_BT.R</strong> is the script to run the sjSDM model with MCMC sampling.</p>
 <p><strong>main/comparative_analysis/sjSDM_MLE.R</strong> is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:</p>
 <pre class="r"><code>devtools::install_github(&quot;https://github.com/TheoreticalEcology/s-jSDM&quot;, ref=&quot;multinomial&quot;, subdir = &quot;sjSDM&quot;)</code></pre>
 <p><strong>main/4corner.R</strong> is the script to run the fourth corner analysis and generate Table S6</p>
@@ -462,11 +447,8 @@ summary {
 </div>
 <div id="supplementary-analyses" class="section level3">
 <h3>Supplementary analyses</h3>
-
 <p>The folder <em>main/permutation_analysis/</em> contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts <strong>main/obs.R</strong> and <strong>main/prior.R</strong>. The results of each permutation script are stored in <em>results/obs_132/</em>, <em>results/obs_213/</em>… depending on the trait order.</p>
-
 <p>The folder <em>main/four_trait_analysis/</em> contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts <strong>main/obs.R</strong> and <strong>main/prior.R</strong>. The results are stored in <em>results/obs_n4/</em> ; the model uses the likelihood function stored in <strong>lib/likelihood_n4.R</strong></p>
-
 <p>The script <strong>main/figuresSI.R</strong> generates the figures S1-S5 and the table S1</p>
 </div>
 </div>

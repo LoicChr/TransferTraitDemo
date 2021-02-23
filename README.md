@@ -2,34 +2,38 @@
 Scripts to use the methodology of **'Linking functional traits to demographic parameters in high-diversity community models'** by L. Chalmandrier, F. Hartig, D.C. Laughlin, H. Lischke, M. Pichler, D.B. Stouffer, L. Pellissier;
 
 
-\par The present code allows to calibrate a community model on a mountain grassland dataset via functional traits. The method assumes a linear relationship between functional traits and the demographic parameters of the community model with a transfer function. Through Bayesian inference it then calibrates the transfer function to best reproduce observed species abundances. 
+The present code allows to calibrate a community model on a mountain grassland dataset via functional traits. The method assumes a linear relationship between functional traits and the demographic parameters of the community model with a transfer function. Through Bayesian inference it then calibrates the transfer function to best reproduce observed species abundances. 
 
-\par All the necessary code to reproduce the analysis in the main manuscript and in the supporting information (including figures, tables and their associated source data).
+All the necessary code to reproduce the analysis in the main manuscript and in the supporting information (including figures, tables and their associated source data).
 
 ## Scripts and functions
 ### Main analysis
-\par ***main/obs.R** is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script. The results are stored in *results/obs/*
+**main/obs.R** is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script. The results are stored in *results/obs/*
 
-\par ***main/prior.R** contains the specification of the prior. It is directly called by **main/obs.R**.
+**main/prior.R** contains the specification of the prior. It is directly called by **main/obs.R**.
 
-\par ***main/NM.R** is the script to run the calibration procedure with randomized trait values. The results are stored in **results/NM/Lls.txt**
+**main/NM.R** is the script to run the calibration procedure with randomized trait values. The results are stored in **results/NM/Lls.txt**
 
-\par ***main/output_analysis.R** contains a small script to visualize the results of **main/obs.R** that are stored in *results/obs/*
+**main/output_analysis.R** contains a small script to visualize the results of **main/obs.R** that are stored in *results/obs/*
 
-\par ***main/figures.R** contains a script to generate the figures 2 to 4 (stored in ./figures) of the manuscript as well as the source data (stored in the ./SourceData)
+**main/figures.R** contains a script to generate the figures 2 to 4 (stored in ./figures) of the manuscript as well as the source data (stored in the ./SourceData)
 
-\par ***lib/likelihood.R** contains the likelihood function to optimize for the three traits models
+**lib/likelihood.R** contains the likelihood function to optimize for the three traits models
 
-\par ***lib/LV_model_wrapped.cpp** contains the ODE model. It is coded in C++ and uses the boost libraries
+**lib/LV_model_wrapped.cpp** contains the ODE model. It is coded in C++ and uses the boost libraries
 
-\par ***lib/trait2demo.R** contains the transfer function that estimates demographic parameters from functional traits.
+**lib/trait2demo.R** contains the transfer function that estimates demographic parameters from functional traits.
 
 ### Comparative analyses
-\par ***main/comparative_analysis/GLM_stan.R** is the script to run the SDM model.
-\par ***main/comparative_analysis/LVM_stan.R** is the script to run the latent variable model (jSDM).
-\par ***main/comparative_analysis/saturated_stan.R** is the script to run the saturated model.
-\par ***main/comparative_analysis/sjSDM_BT.R** is the script to run the sjSDM model with MCMC sampling.
-\par ***main/comparative_analysis/sjSDM_MLE.R** is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:
+**main/comparative_analysis/GLM_stan.R** is the script to run the SDM model.
+
+**main/comparative_analysis/LVM_stan.R** is the script to run the latent variable model (jSDM).
+
+**main/comparative_analysis/saturated_stan.R** is the script to run the saturated model.
+
+**main/comparative_analysis/sjSDM_BT.R** is the script to run the sjSDM model with MCMC sampling.
+
+**main/comparative_analysis/sjSDM_MLE.R** is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:
 ```r
 devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="multinomial", subdir = "sjSDM")
 ```
@@ -44,11 +48,11 @@ devtools::install_github("https://github.com/TheoreticalEcology/s-jSDM", ref="mu
 **lib/saturated.stan** contains the stan model for the saturated model.
 
 ### Supplementary analyses
-\par The folder *main/permutation_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results of each permutation script are stored in *results/obs_132/*, *results/obs_213/*... depending on the trait order.
+The folder *main/permutation_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results of each permutation script are stored in *results/obs_132/*, *results/obs_213/*... depending on the trait order.
 
-\par The folder *main/four_trait_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results are stored in *results/obs_n4/* ; the model uses the likelihood function stored in **lib/likelihood_n4.R**
+The folder *main/four_trait_analysis/* contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts **main/obs.R** and **main/prior.R**. The results are stored in *results/obs_n4/* ; the model uses the likelihood function stored in **lib/likelihood_n4.R**
 
-\par The script **main/figuresSI.R** generates the figures S1-S5 and the table S1
+The script **main/figuresSI.R** generates the figures S1-S5 and the table S1
 
 ## Data : data/data.Rdata
 The data is contained in **data/data.Rdata** and includes:
