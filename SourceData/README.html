@@ -413,74 +413,25 @@ summary {
 </div>
 
 
-<div id="transfertraitdemo" class="section level1">
-<h1>TransferTraitDemo</h1>
-<p>Scripts to use the methodology of <strong>‘Linking functional traits to demographic parameters in high-diversity community models’</strong> by L. Chalmandrier, F. Hartig, D.C. Laughlin, H. Lischke, M. Pichler, D.B. Stouffer, L. Pellissier;</p>
-
-<p>The present code allows to calibrate a community model on a mountain grassland dataset via functional traits. The method assumes a linear relationship between functional traits and the demographic parameters of the community model with a transfer function. Through Bayesian inference it then calibrates the transfer function to best reproduce observed species abundances.</p>
-
-<p>All the necessary code to reproduce the analysis in the main manuscript and in the supporting information (including figures, tables and their associated source data).</p>
-<div id="scripts-and-functions" class="section level2">
-<h2>Scripts and functions</h2>
-<div id="main-analysis" class="section level3">
-<h3>Main analysis</h3>
-
-<p><strong>main/obs.R</strong> is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script. The results are stored in <em>results/obs/</em></p>
-
-<p><strong>main/prior.R</strong> contains the specification of the prior. It is directly called by <strong>main/obs.R</strong>.</p>
-
-<p><strong>main/NM.R</strong> is the script to run the calibration procedure with randomized trait values. The results are stored in <strong>results/NM/Lls.txt</strong></p>
-
-<p><strong>main/output_analysis.R</strong> contains a small script to visualize the results of <strong>main/obs.R</strong> that are stored in <em>results/obs/</em></p>
-
-<p><strong>main/figures.R</strong> contains a script to generate the figures 2 to 4 (stored in ./figures) of the manuscript as well as the source data (stored in the ./SourceData)</p>
-
-<p><strong>lib/likelihood.R</strong> contains the likelihood function to optimize for the three traits models</p>
-
-<p><strong>lib/LV_model_wrapped.cpp</strong> contains the ODE model. It is coded in C++ and uses the boost libraries</p>
-
-<p><strong>lib/trait2demo.R</strong> contains the transfer function that estimates demographic parameters from functional traits.</p>
-</div>
-<div id="comparative-analyses" class="section level3">
-<h3>Comparative analyses</h3>
-
-<strong>main/comparative_analysis/GLM_stan.R</strong> is the script to run the SDM model.
-
-<strong>main/comparative_analysis/LVM_stan.R</strong> is the script to run the latent variable model (jSDM).
-
-<strong>main/comparative_analysis/saturated_stan.R</strong> is the script to run the saturated model.
-
-<strong>main/comparative_analysis/sjSDM_BT.R</strong> is the script to run the sjSDM model with MCMC sampling.
-
-<p><strong>main/comparative_analysis/sjSDM_MLE.R</strong> is the script to run the sjSDM (jSDM) model. To run the sjSDM with the multinomial response you have to install the multinomial branch:</p>
-<pre class="r"><code>devtools::install_github(&quot;https://github.com/TheoreticalEcology/s-jSDM&quot;, ref=&quot;multinomial&quot;, subdir = &quot;sjSDM&quot;)</code></pre>
-<p><strong>main/4corner.R</strong> is the script to run the fourth corner analysis and generate Table S6</p>
-<p><strong>main/comparative_analysis/FiguresCA.R</strong> is the script to produce the Supplemenentary figures 6 and 7</p>
-<p><strong>lib/glm.stan</strong> contains the stan model for the SDM.</p>
-<p><strong>lib/lvm.stan</strong> contains the stan model for the latent variable model (jSDM).</p>
-<p><strong>lib/saturated.stan</strong> contains the stan model for the saturated model.</p>
-</div>
-<div id="supplementary-analyses" class="section level3">
-<h3>Supplementary analyses</h3>
-
-<p>The folder <em>main/permutation_analysis/</em> contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the shuffling of trait axes. The scripts are written following the structure of the scripts <strong>main/obs.R</strong> and <strong>main/prior.R</strong>. The results of each permutation script are stored in <em>results/obs_132/</em>, <em>results/obs_213/</em>… depending on the trait order.</p>
-
-<p>The folder <em>main/four_trait_analysis/</em> contains the scripts to generate the analysis of the Supplementary notes 1 that tested if the approach was robust to the addition of a fourth axis. The scripts are written following the structure of the scripts <strong>main/obs.R</strong> and <strong>main/prior.R</strong>. The results are stored in <em>results/obs_n4/</em> ; the model uses the likelihood function stored in <strong>lib/likelihood_n4.R</strong></p>
-
-<p>The script <strong>main/figuresSI.R</strong> generates the figures S1-S5 and the table S1</p>
-</div>
-</div>
-<div id="data-datadata.rdata" class="section level2">
-<h2>Data : data/data.Rdata</h2>
-<p>The data is contained in <strong>data/data.Rdata</strong> and includes:</p>
-<ol style="list-style-type: decimal">
-<li>ixp: a matrix with plot as rows and species as columns. The matrice entries contains the number of individuals of each species sampled in each plot.</li>
-<li>temp: vector of the mean annual temperature in each plot</li>
-<li>spxt: matrice of the functional traits for each species: reproductive height (Hrepro), vegetative height (Hveg), SLA (specific leaf area), LDMC (leaf dry matter content), LCC (leaf carbon content), LNC (leaf nitrogen content), LD13C (leaf isotopic ratio of carbon 13), LD15N (leaf isotopic ratio of nitrogen 15).</li>
-<li>FG : data frame that contains for each species, its full taxonomic name and its associated functional group. Note that three species have ambiguous taxonomic identification and are noted ‘carex_sp’, ’Ranunculus_sp.“,”hieracium sp.&quot;</li>
-</ol>
-<p>System requirements R 3.6.0</p>
-</div>
+<div id="source-data-of-the-figures-of-linking-functional-traits-to-demographic-parameters-in-high-diversity-community-models" class="section level1">
+<h1>Source data of the figures of ‘Linking functional traits to demographic parameters in high-diversity community models’</h1>
+<p>The folder contains the raw data of the figures, as well as the complete posterior distribution of the calibrated model.</p>
+<p>posterior.csv - sample of the posterior distribution of the transfer function parameters. Each column is one of the parameters.</p>
+<p>prior.csv - sample of the prior distribution of the transfer function parameters. Each column is one of the parameters.</p>
+<p>Figure2A.csv - contains the predictive relative abundance (‘relAb’) of each species (“species”) for each unique temperature value (“temp”)</p>
+<p>Figure2B.csv - contains the observed pseudo R2 values (“obs”) associated to each plot (“plot”). Are also indicated the associated temperature value (“temp”) and the 95% quantile of the distribution of the pseudo R2 values of the null models.</p>
+<p>Figure3A.csv - contains the correlation value between the calibrated demographic rate parameters and each empirical functional traits. The column names indicate which pairs of demographic rates - functional traits the correlation value refers to. Each row represents a sample of the posterior distribution.</p>
+<p>Figure3B.csv - contains the correlation value among the calibrated demographic rate parameters. The column names indicate which pairs of demographic rates the correlation value refers to. Each row represents a sample of the posterior distribution.</p>
+<p>Figure4.csv - contains the demographic rate parameters values (‘Tmin’, ‘l’, ‘c’) for each species (‘species’) and the associated functional group (‘FG’)</p>
+<p>FigureS1S2.csv contains the score of each species along the four first axes of the principal component analysis on species functional traits (columns Axis1, Axis2, Axis3, Axis4). It further contains species name (column SpeciesName), their functional group (column FG) and the average temperature across which the species was observed (TempNiche).</p>
+<p>FigureS3.csv contains the source data for Figure S3. The column phi1 and phi2 contains the simulated values of the parameters <span class="math inline">\(\phi_1\)</span> and <span class="math inline">\(\phi_2\)</span> respectively. corT1y contains the correlation coefficient between the trait 1 and the y variable. corT2yT1 contains the partial correlation coefficient between the trait 2 and the y variable after factoring out the correlation with the trait 1. corT3yT1 contains the partial correlation coefficient between the trait 3 and the y variable after factoring out the correlation with the trait 1</p>
+<p>FigureS4.csv contains the source data for Figure S4. corT1_y_prior1 contains the prior distribution of the correlation between trait 1 and y when <span class="math inline">\(\phi_1\)</span> is drawn in a uniform law (panel <strong>a</strong>); corT2_y_prior1 contains the prior distribution of the correlation between trait 2 and y when <span class="math inline">\(\phi_1\)</span> is drawn in a uniform law (panel <strong>b</strong>); corT3_y_prior1 contains the prior distribution of the correlation between trait 3 and y when <span class="math inline">\(\phi_1\)</span> is drawn in a uniform law (panel <strong>c</strong>); corT1_y_prior2 contains the prior distribution of the correlation between trait 1 and y when <span class="math inline">\(cos(\phi_1)\)</span> is drawn in a uniform law (panel <strong>d</strong>); corT2_y_prior2 contains the prior distribution of the correlation between trait 2 and y when <span class="math inline">\(cos(\phi_1)\)</span> is drawn in a uniform law (panel <strong>e</strong>); corT3_y_prior2 contains the prior distribution of the correlation between trait 3 and y when <span class="math inline">\(cos(\phi_1)\)</span> is drawn in a uniform law (panel <strong>f</strong>)</p>
+<p>Figure S5 does not have a dedicated source data file but the source data is contained in posterior.csv and prior.csv.</p>
+<p>FigureS6.csv contains the ROC curves for the different approaches. FPR contains the false positive rate values, TPR contains the true positive rate values and Model contains the name of the different models.</p>
+<p>TabS1.csv contains the score of each functional trait along the four first axes of the principal component analysis on species functional traits. The last row of the table contains the total variance explained by each axes.</p>
+<p>TabS4.csv contains the source data for the summary table Table S4.</p>
+<p>TabS2S3S5.xlsx contains the source data for the table S2, S3, S5. Columns and rows are exactly the same as in the supplementary information.</p>
+<p>TabS6.csv contains the summarized results of the fourth corner analysis. It contains the pearson correlation coefficient between each trait and the temperature gradient. The trait is stored in the column ‘Trait’, the coefficient value in ‘Obs’, the associated p-value of the permutation test in ‘Pvalue’ and the p-value adjusted for multiple tests in ‘Pvalue.adj’</p>
 </div>
 
 

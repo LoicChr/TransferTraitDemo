@@ -1,9 +1,9 @@
-Test Obs Pvalue Pvalue.adj
-Plant reproductive height (log) 0.58509 0.001 0.008
-Plant vegetative height (log) 0.60787 0.001 0.008
-SLA  (log) 0.21552 0.078 0.312
-LDMC (log) -0.17202 0.173 0.519
-Leaf carbon content (log) -0.04213 0.703 1.000
-Leaf nitrogen content (log) -0.03532 0.749 1.000
-Leaf d13C -0.37865 0.001 0.008
-Leaf d15N 0.27853 0.022 0.110
+Trait,Obs,Pvalue,Pvalue.adj
+Plant reproductive height (log),0.58509092,0.001,0.008
+Plant vegetative height (log),0.60787052,0.001,0.008
+SLA  (log),0.21552487,0.060,0.240
+LDMC (log),-0.17202308,0.162,0.486
+Leaf carbon content (log),-0.04213215,0.738,1.000
+Leaf nitrogen content (log),-0.03531837,0.806,1.000
+Leaf d13C,-0.37865245,0.001,0.008
+Leaf d15N,0.27852951,0.012,0.060

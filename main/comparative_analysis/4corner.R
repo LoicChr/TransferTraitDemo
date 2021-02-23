@@ -26,5 +26,6 @@ tab[,"Test"] <- gsub("V1 / ","", tab[,"Test"])
 tab[,"Obs"] <- gsub(" ","", tab[,"Obs"])
 tab[,"Pvalue"] <- gsub(" ","", tab[,"Pvalue"])
 tab[,1] <- c("Plant reproductive height (log)","Plant vegetative height (log)", "SLA  (log)", "LDMC (log)", "Leaf carbon content (log)", "Leaf nitrogen content (log)","Leaf d13C","Leaf d15N")
-
-write.table(tab, file = "SourceData/TabS6.csv", quote =F, row.names = F)
+colnames(tab)[1] <- "Trait"
+write.csv(tab, file = "SourceData/TabS6.csv", quote =F, row.names = F)
+  
