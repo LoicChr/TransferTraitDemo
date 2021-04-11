@@ -70,13 +70,13 @@ colPalette <- brewer.pal(11, "RdBu")[-c(1,2,10,11)]
 cairo_ps("./figures/Figure3.eps", width = 9, height = 4.5)
 layout(matrix(c(1,1,1,2,2), nrow = 1, byrow = T))
 par(xpd = TRUE)
-cor_med <- cor_trait_array_med[2,,]
+cor_med <- cor_trait_array_med[2,c("Hrepro", "Hveg", "SLA", "LDMC", "LCC", "LNC", "LD13C", "LD15N"),c("Tmin", "l", "c")]
 colnames(cor_med) <- c("Minimum tolerated temperature", "Sensitivity to biomass", "Intraspecific competition rate")
 row.names(cor_med) <- c("Reproductive height", "Vegetative height","Specific leaf area", "Leaf dry matter content", "Leaf carbon content", "Leaf nitrogen content", "$Leaf~delta^{13}~C", "$Leaf~delta^{15}~N")
 corrplot(cor_med, method= "circle", cl.pos = "n",number.cex=0.9,mar = c(0,0,2,0), asp = 0.2, cl.cex = 0.9, cl.align.text = "l", tl.cex = 0.8, col = colPalette , addCoef.col = "black", tl.col = "black")
 mtext("a", 2, adj=6, las=1, padj=-9, line = -2, cex = 0.8, font = 2)
 par(xpd = TRUE)
-cor_med <-cor_demo_array_med [2,,]
+cor_med <-cor_demo_array_med [2,c("Tmin", "l", "c"),c("Tmin", "l", "c")]
 cor_med[upper.tri(cor_med, diag = T)] <- NA
 colnames(cor_med) <- row.names(cor_med) <- c("Minimum tolerated temperature", "Sensitivity to biomass", "Intraspecific competition rate")
 corrplot(cor_med, method= "circle", cl.pos = "n",na.label = " ",number.cex=0.9,mar = c(0,0,0,0), cl.cex =0.9, cl.align.text = "l", tl.cex = 0.8, col = colPalette , diag = T, addCoef.col = "black", tl.col = "black")
