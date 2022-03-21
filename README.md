@@ -8,6 +8,8 @@ The present code allows to calibrate a community model on a mountain grassland d
 
 All the necessary code to reproduce the analysis in the main manuscript and in the supporting information (including figures, tables and their associated source data).
 
+This project has received funding from the European Union’s Horizon 2020 research and innovation programme under the Marie Skłodowska- Curie grant agreement No 840946.
+
 ## Scripts and functions
 ### Main analysis
 **main/obs.R** is the main script that show the procedure to treat the dataset and reproduces the model used in the original article. Details explanation of each function is provided in their associated script. The results are stored in *results/obs/*
